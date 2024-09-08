@@ -1,4 +1,6 @@
 using Company.G03.DAL.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Company.G03.PL
 {
@@ -13,7 +15,10 @@ namespace Company.G03.PL
 
             //Dependency Injection (DI) is a C# design pattern by allowing an object's dependencies to be injected at runtime rather than hard-coded.
             // builder.Services.AddScoped<AppDbContext>(); // Allow DI For AppDbContext  
-            builder.Services.AddDbContext<AppDbContext>(); // Allow DI For AppDbContext  
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            }); // Allow DI For AppDbContext  
 
             var app = builder.Build();
 
