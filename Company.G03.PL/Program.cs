@@ -1,3 +1,5 @@
+using Company.G03.DAL.Data.Contexts;
+
 namespace Company.G03.PL
 {
     public class Program
@@ -8,6 +10,10 @@ namespace Company.G03.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //Dependency Injection (DI) is a C# design pattern by allowing an object's dependencies to be injected at runtime rather than hard-coded.
+            // builder.Services.AddScoped<AppDbContext>(); // Allow DI For AppDbContext  
+            builder.Services.AddDbContext<AppDbContext>(); // Allow DI For AppDbContext  
 
             var app = builder.Build();
 
