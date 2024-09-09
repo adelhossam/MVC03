@@ -22,7 +22,7 @@ namespace Company.G03.BLL.Repositories
             return _context.Departments.ToList();
         }
 
-        public Department Get(int? id)
+        public Department Get(int id)
         {
             // return _context.Departments.FirstOrDefualt(D=>D.Id == id)
             return _context.Departments.Find(id);

@@ -35,5 +35,16 @@ namespace Company.G03.PL.Controllers
             }
             return View(model); // If model is not Valid it will remain in the same page
         }
+
+        public IActionResult Detatils(int? id)
+        {
+            if (id is null) return BadRequest(); // Erorr 400
+
+            var department = _departmentRepository.Get(id.Value);
+
+            if (department is null) return NotFound(); //Erorr 404
+
+            return View(department);
+        }
     }
 }
