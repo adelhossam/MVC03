@@ -46,5 +46,45 @@ namespace Company.G03.PL.Controllers
 
             return View(department);
         }
+        public IActionResult Update()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Update(Department model)
+        {
+            if (ModelState.IsValid)  // To Sure The Data Annotation About this model Is Valid
+            {
+                var count = _departmentRepository.Update(model); // To Sure the model is Add To Database
+                if (count > 0)
+                {
+                    return RedirectToAction(nameof(Index)); // Redirect To The Previous Page
+                }
+            }
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id is null) return BadRequest(); // Erorr 400
+
+            var department = _departmentRepository.Get(id.Value);
+
+            if (department is null) return NotFound(); //Erorr 404
+
+            return View(department);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Department model) 
+        {
+            var count = _departmentRepository.Delete(model);
+            if (count > 0) 
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
     }
 }
