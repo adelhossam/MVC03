@@ -1,3 +1,5 @@
+using Company.G03.BLL.Interfaces;
+using Company.G03.BLL.Repositories;
 using Company.G03.DAL.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -19,6 +21,8 @@ namespace Company.G03.PL
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); // Allow DI For AppDbContext  
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository 
 
             var app = builder.Build();
 
