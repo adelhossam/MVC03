@@ -11,7 +11,7 @@ namespace Company.G03.DAL.Data.Configuration
 {
     public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
-        public void Configure(EntityTypeBuilder<Employee> builder)
+        public void Configure(EntityTypeBuilder<Employee> builder) 
         {
             builder.Property(E=>E.Salary).HasColumnType("decimal(18,2)");
         }
