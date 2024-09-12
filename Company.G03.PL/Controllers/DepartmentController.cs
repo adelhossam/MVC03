@@ -36,7 +36,7 @@ namespace Company.G03.PL.Controllers
             return View(model); // If model is not Valid it will remain in the same page
         }
 
-        public IActionResult Detatils(int? id)
+        public IActionResult Detatils(int? id , string Viewname = "Detatils")
         {
             if (id is null) return BadRequest(); // Erorr 400
 
@@ -46,9 +46,13 @@ namespace Company.G03.PL.Controllers
 
             return View(department);
         }
-        public IActionResult Update()
+        public IActionResult Update(int? id)
         {
-            return View();
+            //if (id is null) return BadRequest();
+            //var department = _departmentRepository.Get(id.Value);
+            //if (department is null) return NotFound();
+            //return View(department);
+            return Detatils(id, "Update"); // Refactor Code
         }
 
         [HttpPost]
@@ -77,13 +81,14 @@ namespace Company.G03.PL.Controllers
         [HttpGet]
         public IActionResult Delete(int? id)
         {
-            if (id is null) return BadRequest(); // Erorr 400
+            //if (id is null) return BadRequest(); // Erorr 400
 
-            var department = _departmentRepository.Get(id.Value);
+            //var department = _departmentRepository.Get(id.Value);
 
-            if (department is null) return NotFound(); //Erorr 404
+            //if (department is null) return NotFound(); //Erorr 404
 
-            return View(department);
+            //return View(department);
+            return Detatils(id, "Delete"); // Refactoring Code
         }
 
         [HttpPost]
