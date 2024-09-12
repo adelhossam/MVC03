@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Company.G03.DAL.Models
 {
-    public class Employee
+    public class Employee : BaseEntity
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Name Is Required!!")]
         public string Name { get; set; }
         [Range(25,60, ErrorMessage = "Age Must Be in 25 And 60")]
