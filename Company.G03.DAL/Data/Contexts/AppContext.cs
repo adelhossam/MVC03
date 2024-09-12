@@ -25,6 +25,7 @@ namespace Company.G03.DAL.Data.Contexts
         //    optionsBuilder.UseSqlServer("Server = .; Database = CompanyMVCG03 ; Trusted_Connection = True ; TurstServerCertificate = True");
         //}
         public DbSet<Department>Departments { get; set; }
+        public DbSet<Employee>Employees { get; set; }
        
     }
 }
