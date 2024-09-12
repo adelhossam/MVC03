@@ -23,6 +23,7 @@ namespace Company.G03.PL
             }); // Allow DI For AppDbContext  
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository 
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             var app = builder.Build();
 

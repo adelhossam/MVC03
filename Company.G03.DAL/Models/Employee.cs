@@ -17,6 +17,7 @@ namespace Company.G03.DAL.Models
         ,ErrorMessage ="Address must be like 123-Street-City-Country")]
         public string Address { get; set; }
         [Required(ErrorMessage = "Salary Is Required!!")]
+        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
         [EmailAddress]
         public string Email { get; set; }
