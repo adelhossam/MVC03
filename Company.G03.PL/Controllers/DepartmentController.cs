@@ -87,12 +87,21 @@ namespace Company.G03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Department model) 
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete([FromRoute]int? id,Department model) 
         {
-            var count = _departmentRepository.Delete(model);
-            if (count > 0) 
+            try 
             {
-                return RedirectToAction(nameof(Index));
+                if (id != model.Id) return BadRequest();
+                var count = _departmentRepository.Delete(model);
+                if (count > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (Exception ex) 
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
             }
             return View(model);
         }
