@@ -52,16 +52,26 @@ namespace Company.G03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Department model)
+        [ValidateAntiForgeryToken] // Prevent any Extenal Tool Like Postman To Call This Action 
+        public IActionResult Update([FromRoute]int? id,Department model) // [FromRoute] it means Get The value of id from Path or segment
         {
-            if (ModelState.IsValid)  // To Sure The Data Annotation About this model Is Valid
+            try
             {
-                var count = _departmentRepository.Update(model); // To Sure the model is Add To Database
-                if (count > 0)
+                if (id != model.Id) return BadRequest(); // To prevent any Modification in Front End and try to change diffrent model
+                if (ModelState.IsValid)  // To Sure The Data Annotation About this model Is Valid
                 {
-                    return RedirectToAction(nameof(Index)); // Redirect To The Previous Page
+                    var count = _departmentRepository.Update(model); // To Sure the model is Add To Database
+                    if (count > 0)
+                    {
+                        return RedirectToAction(nameof(Index)); // Redirect To The Previous Page
+                    }
                 }
             }
+            catch (Exception ex) 
+            {
+                ModelState.AddModelError(string.Empty, ex.Message); // To Print The Exception In The View
+            }
+            
             return View(model);
         }
         [HttpGet]
