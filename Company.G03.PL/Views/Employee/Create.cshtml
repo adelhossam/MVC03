@@ -1,0 +1,27 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Employee</h1>
+<br />
+<br />
+
+<form asp-action="Create">
+   
+    <partial name="PartialView/CreateUpdateEmployeePartialView" model="Model" />
+
+    <br />
+    <input value="Create" type="submit" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-light">Back To List</a>
+</form>
+
+@* Client Side Validation The Page Wont Send Request To Server Unless It Sure The Request Dosent Fail 
+Like Form if U Send it Without Complete it it Wont Sent a Request To Server   *@
+
+
+@section ClientServerValidation
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

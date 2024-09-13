@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Employee>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index Page</h1>
+<br />
+<br />
+
+<a asp-action="Create" class="btn btn-primary">Create Employee</a>
+<br />
+<br />
+@if (Model.Count() > 0)
+{
+   <table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(E => E.Name)</th>
+            <th>@Html.DisplayNameFor(E => E.Age)</th>
+            <th>@Html.DisplayNameFor(E => E.Address)</th>
+            <th>@Html.DisplayNameFor(E => E.Email)</th>
+            <th>@Html.DisplayNameFor(E => E.PhoneNumber)</th>
+            <th>@Html.DisplayNameFor(E => E.Salary)</th>
+            <th>@Html.DisplayNameFor(E => E.IsActive)</th>
+            <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+            <th>Details</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td>@employee.Name</td>
+                <td>@employee.Age</td>
+                <td>@employee.Address</td>
+                <td>@Html.DisplayFor(M => employee.Email)</td> @* To Print in fornt as Email Address *@
+                <td>@employee.PhoneNumber</td>
+                <td>@Html.DisplayFor(M=>employee.Salary)</td> @* To Print in fornt as Currancy *@
+                <td>@employee.IsActive</td>
+                <td>@employee.HiringDate</td>
+
+                    <partial name="_ButtonsPartialView" model="@employee.Id"/>
+            </tr>
+
+        }
+    </tbody>
+
+</table>
+}
+else 
+{
+    <div class="alert alert-danger">
+        <h4>No Employees Exites</h4>
+    </div>
+
+}
+
