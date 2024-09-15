@@ -16,6 +16,25 @@ namespace Company.G03.PL.Controllers
         public IActionResult Index()
         {
             var employees = _employeeRepository.GetAll();
+
+            //string Message = "Hello World";
+            ////View's Dectionary : Use To Transfer Extra Data From Action To View [One Way]
+            ////1. ViewData : Property Inherited From Controller - Dectionary
+            //// Require Casting
+
+            //ViewData["Message"] = Message + " From ViewData";
+
+            ////2. ViewBag  : Property Inherited From Controller - dynamic
+            //// Not Require Casting
+
+            //ViewBag.Message01 = Message + " From ViewBag";
+
+            ////3. TempData : Property Inherited From Controller - Dectionary
+            //// Require Casting
+
+            //TempData["Message02"] = Message + " From TempData";
+
+
             return View(employees);
         }
         [HttpGet]
@@ -31,7 +50,14 @@ namespace Company.G03.PL.Controllers
             {
                 var count = _employeeRepository.Add(model);
                 if (count > 0)
-                    return RedirectToAction("Index");
+                {
+                    TempData["Message"] = "Employee is Created Successfully";
+                }
+                else
+                {
+                    TempData["Message"] = "Employee Is Not Created Successfully";
+                }
+                return RedirectToAction("Index");
             }
             return View();
         }

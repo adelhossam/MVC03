@@ -3,9 +3,27 @@
     ViewData["Title"] = "Index";
 }
 
+
 <h1>Index Page</h1>
 <br />
 <br />
+
+
+@* <div class="alert alert-danger">
+    <p>@ViewData["Message"]</p>
+</div>
+
+<div class="alert alert-warning">
+    <p>@ViewBag.Message01</p>
+</div>
+ *@
+@if (!string.IsNullOrEmpty(@TempData["Message"] as string))
+{
+    <div class="alert alert-success">
+        <p>@TempData["Message"]</p>
+    </div>
+}
+
 
 <a asp-action="Create" class="btn btn-primary">Create Employee</a>
 <br />
