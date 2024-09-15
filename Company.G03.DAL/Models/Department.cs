@@ -17,5 +17,6 @@ namespace Company.G03.DAL.Models
         public string Name { get; set; }
         [DisplayName("Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
+        public ICollection<Employee> Employees { get; set; }
     }
 }
