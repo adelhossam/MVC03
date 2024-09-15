@@ -8,9 +8,11 @@ namespace Company.G03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IEmployeeRepository employeeRepository)//ASK CLR To Create an Object From EmployeeController
+        private readonly IDepartmentRepository _departmentRepository;
+        public EmployeeController(IEmployeeRepository employeeRepository , IDepartmentRepository departmentRepository)//ASK CLR To Create an Object From EmployeeController
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public IActionResult Index()
@@ -40,6 +42,9 @@ namespace Company.G03.PL.Controllers
         [HttpGet]
         public IActionResult Create() 
         {
+            var departments = _departmentRepository.GetAll(); // Extra Data
+            ViewData["Departments"] = departments;
+
             return View();
         }
         [HttpPost]
@@ -76,6 +81,9 @@ namespace Company.G03.PL.Controllers
             //var employee = _employeeRepository.Get(id.Value);
             //if (employee is null) return NotFound();
             //return View(employee);
+
+            var departments = _departmentRepository.GetAll(); // Extra Data
+            ViewData["Departments"] = departments;
             return Details(id, "Update");
         }
         [HttpPost]
