@@ -1,6 +1,8 @@
 ﻿using Company.G03.BLL.Interfaces;
 using Company.G03.DAL.Models;
+using Company.G03.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 namespace Company.G03.PL.Controllers
@@ -18,6 +20,7 @@ namespace Company.G03.PL.Controllers
         public IActionResult Index(string SearchInput)
         {
             var employees = Enumerable.Empty<Employee>();
+            //var employeesViewModel = new Collection<EmployeeViewModel>();
             if (string.IsNullOrEmpty(SearchInput))
             {
                 employees = _employeeRepository.GetAll();
@@ -57,11 +60,29 @@ namespace Company.G03.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Employee model)
+        public IActionResult Create(EmployeeViewModel model)
         {
             if (ModelState.IsValid) 
             {
-                var count = _employeeRepository.Add(model);
+                //Casting EmployeeViewModel -> Employee
+                //Manuall Casting
+                var employee = new Employee() 
+                {
+                    Id = model.Id,
+                    Name = model.Name,
+                    Age = model.Age,
+                    Address = model.Address,
+                    Salary = model.Salary,
+                    PhoneNumber = model.PhoneNumber,
+                    Email = model.Email,
+                    IsActive = model.IsActive,
+                    IsDeleted = model.IsDeleted,
+                    DateOfCreation = model.DateOfCreation,
+                    HiringDate = model.HiringDate,
+                    WorkForId = model.WorkForId,
+                };
+
+                var count = _employeeRepository.Add(employee);
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee is Created Successfully";
@@ -96,14 +117,32 @@ namespace Company.G03.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update([FromRoute]int? id , Employee model)
+        public IActionResult Update([FromRoute]int? id , EmployeeViewModel model)
         {
             try
             {
                 if (id != model.Id) return BadRequest();
                 if (ModelState.IsValid)
                 {
-                    var Count = _employeeRepository.Update(model);
+
+                    //Casting EmployeeViewModel -> Employee
+                    //Manuall Casting
+                    var employee = new Employee()
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                        Age = model.Age,
+                        Address = model.Address,
+                        Salary = model.Salary,
+                        PhoneNumber = model.PhoneNumber,
+                        Email = model.Email,
+                        IsActive = model.IsActive,
+                        IsDeleted = model.IsDeleted,
+                        DateOfCreation = model.DateOfCreation,
+                        HiringDate = model.HiringDate,
+                        WorkForId = model.WorkForId,
+                    };
+                    var Count = _employeeRepository.Update(employee);
                     if (Count > 0)
                         return RedirectToAction("Index");
                 }
@@ -126,14 +165,32 @@ namespace Company.G03.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute]int? id,Employee model)
+        public IActionResult Delete([FromRoute]int? id,EmployeeViewModel model)
         {
             try 
             {
                 if (id != model.Id) return BadRequest();
                 if (ModelState.IsValid)
                 {
-                    var count = _employeeRepository.Delete(model);
+
+                    //Casting EmployeeViewModel -> Employee
+                    //Manuall Casting
+                    var employee = new Employee()
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                        Age = model.Age,
+                        Address = model.Address,
+                        Salary = model.Salary,
+                        PhoneNumber = model.PhoneNumber,
+                        Email = model.Email,
+                        IsActive = model.IsActive,
+                        IsDeleted = model.IsDeleted,
+                        DateOfCreation = model.DateOfCreation,
+                        HiringDate = model.HiringDate,
+                        WorkForId = model.WorkForId,
+                    };
+                    var count = _employeeRepository.Delete(employee);
                     if (count > 0)
                         return RedirectToAction("Index");
                 }
