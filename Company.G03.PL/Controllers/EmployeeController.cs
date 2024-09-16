@@ -1,4 +1,5 @@
-﻿using Company.G03.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.G03.BLL.Interfaces;
 using Company.G03.DAL.Models;
 using Company.G03.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +12,23 @@ namespace Company.G03.PL.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        public EmployeeController(IEmployeeRepository employeeRepository , IDepartmentRepository departmentRepository)//ASK CLR To Create an Object From EmployeeController
+
+        private readonly IMapper _mapper;
+
+        public EmployeeController(
+            IEmployeeRepository employeeRepository,
+            IDepartmentRepository departmentRepository,
+            IMapper mapper
+            )//ASK CLR To Create an Object From EmployeeController
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         public IActionResult Index(string SearchInput)
         {
             var employees = Enumerable.Empty<Employee>();
-            //var employeesViewModel = new Collection<EmployeeViewModel>();
             if (string.IsNullOrEmpty(SearchInput))
             {
                 employees = _employeeRepository.GetAll();
@@ -29,7 +37,7 @@ namespace Company.G03.PL.Controllers
             {
                 employees = _employeeRepository.GetByName(SearchInput);
             }
-
+            var result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
             //string Message = "Hello World";
             ////View's Dectionary : Use To Transfer Extra Data From Action To View [One Way]
             ////1. ViewData : Property Inherited From Controller - Dectionary
@@ -48,7 +56,7 @@ namespace Company.G03.PL.Controllers
             //TempData["Message02"] = Message + " From TempData";
 
 
-            return View(employees);
+            return View(result);
         }
         [HttpGet]
         public IActionResult Create() 
@@ -66,21 +74,24 @@ namespace Company.G03.PL.Controllers
             {
                 //Casting EmployeeViewModel -> Employee
                 //Manuall Casting
-                var employee = new Employee() 
-                {
-                    Id = model.Id,
-                    Name = model.Name,
-                    Age = model.Age,
-                    Address = model.Address,
-                    Salary = model.Salary,
-                    PhoneNumber = model.PhoneNumber,
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    DateOfCreation = model.DateOfCreation,
-                    HiringDate = model.HiringDate,
-                    WorkForId = model.WorkForId,
-                };
+                //var employee = new Employee() 
+                //{
+                //    Id = model.Id,
+                //    Name = model.Name,
+                //    Age = model.Age,
+                //    Address = model.Address,
+                //    Salary = model.Salary,
+                //    PhoneNumber = model.PhoneNumber,
+                //    Email = model.Email,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    DateOfCreation = model.DateOfCreation,
+                //    HiringDate = model.HiringDate,
+                //    WorkForId = model.WorkForId,
+                //};
+
+                // Atuo Mapping
+                var employee = _mapper.Map<Employee>(model); // Cast model To Employee
 
                 var count = _employeeRepository.Add(employee);
                 if (count > 0)
@@ -127,21 +138,24 @@ namespace Company.G03.PL.Controllers
 
                     //Casting EmployeeViewModel -> Employee
                     //Manuall Casting
-                    var employee = new Employee()
-                    {
-                        Id = model.Id,
-                        Name = model.Name,
-                        Age = model.Age,
-                        Address = model.Address,
-                        Salary = model.Salary,
-                        PhoneNumber = model.PhoneNumber,
-                        Email = model.Email,
-                        IsActive = model.IsActive,
-                        IsDeleted = model.IsDeleted,
-                        DateOfCreation = model.DateOfCreation,
-                        HiringDate = model.HiringDate,
-                        WorkForId = model.WorkForId,
-                    };
+
+                    //var employee = new Employee()
+                    //{
+                    //    Id = model.Id,
+                    //    Name = model.Name,
+                    //    Age = model.Age,
+                    //    Address = model.Address,
+                    //    Salary = model.Salary,
+                    //    PhoneNumber = model.PhoneNumber,
+                    //    Email = model.Email,
+                    //    IsActive = model.IsActive,
+                    //    IsDeleted = model.IsDeleted,
+                    //    DateOfCreation = model.DateOfCreation,
+                    //    HiringDate = model.HiringDate,
+                    //    WorkForId = model.WorkForId,
+                    //};
+                    var employee = _mapper.Map<Employee>(model); // Cast model To Employee
+
                     var Count = _employeeRepository.Update(employee);
                     if (Count > 0)
                         return RedirectToAction("Index");
@@ -175,21 +189,23 @@ namespace Company.G03.PL.Controllers
 
                     //Casting EmployeeViewModel -> Employee
                     //Manuall Casting
-                    var employee = new Employee()
-                    {
-                        Id = model.Id,
-                        Name = model.Name,
-                        Age = model.Age,
-                        Address = model.Address,
-                        Salary = model.Salary,
-                        PhoneNumber = model.PhoneNumber,
-                        Email = model.Email,
-                        IsActive = model.IsActive,
-                        IsDeleted = model.IsDeleted,
-                        DateOfCreation = model.DateOfCreation,
-                        HiringDate = model.HiringDate,
-                        WorkForId = model.WorkForId,
-                    };
+
+                    //var employee = new Employee()
+                    //{
+                    //    Id = model.Id,
+                    //    Name = model.Name,
+                    //    Age = model.Age,
+                    //    Address = model.Address,
+                    //    Salary = model.Salary,
+                    //    PhoneNumber = model.PhoneNumber,
+                    //    Email = model.Email,
+                    //    IsActive = model.IsActive,
+                    //    IsDeleted = model.IsDeleted,
+                    //    DateOfCreation = model.DateOfCreation,
+                    //    HiringDate = model.HiringDate,
+                    //    WorkForId = model.WorkForId,
+                    //};
+                    var employee = _mapper.Map<Employee>(model); // Cast model To Employee
                     var count = _employeeRepository.Delete(employee);
                     if (count > 0)
                         return RedirectToAction("Index");

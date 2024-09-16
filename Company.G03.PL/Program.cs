@@ -1,9 +1,11 @@
 using Company.G03.BLL.Interfaces;
 using Company.G03.BLL.Repositories;
 using Company.G03.DAL.Data.Contexts;
+using Company.G03.PL.Mapping;
 using Company.G03.PL.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace Company.G03.PL
 {
@@ -30,8 +32,11 @@ namespace Company.G03.PL
             builder.Services.AddScoped<IScopedServices, ScopedServices>();
             builder.Services.AddTransient<ITransientServices, TransientServices>();
             builder.Services.AddSingleton<ISingletonServices, SingletonServices>();
-            
 
+            
+            //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            //builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             var app = builder.Build();
 
