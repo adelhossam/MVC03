@@ -12,7 +12,7 @@ namespace Company.G03.BLL.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        private AppDbContext _context;
+        private protected readonly AppDbContext _context; // Protected as childern can use it
         public GenericRepository(AppDbContext context)
         {
             _context = context;

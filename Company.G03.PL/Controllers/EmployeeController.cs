@@ -15,9 +15,17 @@ namespace Company.G03.PL.Controllers
             _departmentRepository = departmentRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
+            var employees = Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employees = _employeeRepository.GetAll();
+            }
+            else
+            {
+                employees = _employeeRepository.GetByName(SearchInput);
+            }
 
             //string Message = "Hello World";
             ////View's Dectionary : Use To Transfer Extra Data From Action To View [One Way]
