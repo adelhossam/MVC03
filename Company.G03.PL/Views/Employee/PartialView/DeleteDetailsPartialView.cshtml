@@ -1,4 +1,6 @@
-﻿<div class="form-group ">
+﻿@model EmployeeViewModel
+
+<div class="form-group ">
     <label asp-for="Name" class="col-form-lable"></label>
     <input asp-for="Name" class="form-control" readonly />
 </div>
@@ -18,7 +20,6 @@
     <input asp-for="Email" class="form-control" readonly />
 </div>
 
-@model Employee
 
 <div class="form-group ">
     <label asp-for="PhoneNumber" class="col-form-lable"></label>

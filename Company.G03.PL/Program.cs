@@ -1,8 +1,12 @@
+using Company.G03.BLL;
 using Company.G03.BLL.Interfaces;
 using Company.G03.BLL.Repositories;
 using Company.G03.DAL.Data.Contexts;
+using Company.G03.PL.Mapping;
+using Company.G03.PL.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace Company.G03.PL
 {
@@ -22,8 +26,18 @@ namespace Company.G03.PL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); // Allow DI For AppDbContext  
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository 
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository 
+            // builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddScoped<IScopedServices, ScopedServices>();
+            builder.Services.AddTransient<ITransientServices, TransientServices>();
+            builder.Services.AddSingleton<ISingletonServices, SingletonServices>();
+
+            
+            //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            //builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             var app = builder.Build();
 
