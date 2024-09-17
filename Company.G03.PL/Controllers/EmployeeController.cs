@@ -18,8 +18,8 @@ namespace Company.G03.PL.Controllers
         public EmployeeController(
             IEmployeeRepository employeeRepository,
             IDepartmentRepository departmentRepository,
-            IMapper mapper
-            )//ASK CLR To Create an Object From EmployeeController
+            IMapper mapper 
+            )
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
@@ -110,8 +110,10 @@ namespace Company.G03.PL.Controllers
         public IActionResult Details(int?id , string ViewName = "Details") 
         {
             if (id is null) return BadRequest();
-            var employee = _employeeRepository.Get(id.Value);
+            var emp = _employeeRepository.Get(id.Value);
+            var employee = _mapper.Map<EmployeeViewModel>(emp);
             if(employee is null) return NotFound();
+
             return View(employee);
         }
         [HttpGet]
