@@ -10,19 +10,22 @@ namespace Company.G03.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        //private readonly IEmployeeRepository _employeeRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
         public EmployeeController(
-            IEmployeeRepository employeeRepository,
-            IDepartmentRepository departmentRepository,
+            //IEmployeeRepository employeeRepository,
+            //IDepartmentRepository departmentRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper 
             )
         {
-            _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            //_employeeRepository = employeeRepository;
+            //_departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -31,11 +34,11 @@ namespace Company.G03.PL.Controllers
             var employees = Enumerable.Empty<Employee>();
             if (string.IsNullOrEmpty(SearchInput))
             {
-                employees = _employeeRepository.GetAll();
+                employees = _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-                employees = _employeeRepository.GetByName(SearchInput);
+                employees = _unitOfWork.EmployeeRepository.GetByName(SearchInput);
             }
             var result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
             //string Message = "Hello World";
@@ -61,7 +64,7 @@ namespace Company.G03.PL.Controllers
         [HttpGet]
         public IActionResult Create() 
         {
-            var departments = _departmentRepository.GetAll(); // Extra Data
+            var departments = _unitOfWork.DepartmentRepository.GetAll(); // Extra Data So we Use ViewData
             ViewData["Departments"] = departments;
 
             return View();
@@ -93,7 +96,7 @@ namespace Company.G03.PL.Controllers
                 // Atuo Mapping
                 var employee = _mapper.Map<Employee>(model); // Cast model To Employee
 
-                var count = _employeeRepository.Add(employee);
+                var count = _unitOfWork.EmployeeRepository.Add(employee);
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee is Created Successfully";
@@ -110,7 +113,7 @@ namespace Company.G03.PL.Controllers
         public IActionResult Details(int?id , string ViewName = "Details") 
         {
             if (id is null) return BadRequest();
-            var emp = _employeeRepository.Get(id.Value);
+            var emp = _unitOfWork.EmployeeRepository.Get(id.Value);
             var employee = _mapper.Map<EmployeeViewModel>(emp);
             if(employee is null) return NotFound();
 
@@ -124,7 +127,7 @@ namespace Company.G03.PL.Controllers
             //if (employee is null) return NotFound();
             //return View(employee);
 
-            var departments = _departmentRepository.GetAll(); // Extra Data
+            var departments = _unitOfWork.DepartmentRepository.GetAll(); // Extra Data
             ViewData["Departments"] = departments;
             return Details(id, "Update");
         }
@@ -158,7 +161,7 @@ namespace Company.G03.PL.Controllers
                     //};
                     var employee = _mapper.Map<Employee>(model); // Cast model To Employee
 
-                    var Count = _employeeRepository.Update(employee);
+                    var Count = _unitOfWork.EmployeeRepository.Update(employee);
                     if (Count > 0)
                         return RedirectToAction("Index");
                 }
@@ -208,7 +211,7 @@ namespace Company.G03.PL.Controllers
                     //    WorkForId = model.WorkForId,
                     //};
                     var employee = _mapper.Map<Employee>(model); // Cast model To Employee
-                    var count = _employeeRepository.Delete(employee);
+                    var count = _unitOfWork.EmployeeRepository.Delete(employee);
                     if (count > 0)
                         return RedirectToAction("Index");
                 }
