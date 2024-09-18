@@ -26,5 +26,8 @@ namespace Company.G03.PL.ViewModels
         public DateTime DateOfCreation { get; set; } = DateTime.Now;
         public int? WorkForId { get; set; } // FK By Convention NavigationalNamd + Pk Name in Department
         public Department? WorkFor { get; set; } // Navigational Property
+        public IFormFile? Image { get; set; }
+        public string? ImageName { get; set; }
+
     }
 }

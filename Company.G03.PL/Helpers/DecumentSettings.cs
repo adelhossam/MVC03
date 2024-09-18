@@ -4,15 +4,15 @@ namespace Company.G03.PL.Helpers
 {
     public static class DecumentSettings
     {
-        public static string UploadFileCompletedEventArgs(IFormFile file , string folderName)
+        public static string UploadFile(IFormFile file , string folderName)
         {
             //1- Get Folder Path 
             //string FolderPath = Directory.GetCurrentDirectory() + @"wwwroot\files" + FolderName;
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\files", folderName);
 
             //2- File Name Must Be Unique
-            string fileName = $"{Guid.NewGuid}{file.Name}";
-
+            string fileName = $"{Guid.NewGuid()}{file.FileName}";
+             
             //3- Get File Path
             string filePath = Path.Combine(folderPath, fileName);
 

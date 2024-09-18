@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Company.G03.BLL.Interfaces;
 using Company.G03.DAL.Models;
+using Company.G03.PL.Helpers;
 using Company.G03.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 
 namespace Company.G03.PL.Controllers
 {
@@ -75,6 +77,8 @@ namespace Company.G03.PL.Controllers
         {
             if (ModelState.IsValid) 
             {
+
+                model.ImageName = DecumentSettings.UploadFile(model.Image,"images");
                 //Casting EmployeeViewModel -> Employee
                 //Manuall Casting
                 //var employee = new Employee() 

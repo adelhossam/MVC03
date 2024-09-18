@@ -24,5 +24,8 @@ namespace Company.G03.DAL.Models
         public DateTime DateOfCreation { get; set; } = DateTime.Now;
         public int? WorkForId { get;set; } // FK By Convention NavigationalNamd + Pk Name in Department
         public Department? WorkFor { get; set; } // Navigational Property
+
+        public string? ImageName { get; set; }
+
     }
 }
