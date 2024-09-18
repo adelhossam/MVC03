@@ -163,6 +163,12 @@ namespace Company.G03.PL.Controllers
                     //    HiringDate = model.HiringDate,
                     //    WorkForId = model.WorkForId,
                     //};
+                    if (model.ImageName is not null)
+                    {
+                        DecumentSettings.Delete(model.ImageName, "images");
+                    }
+                    model.ImageName= DecumentSettings.UploadFile(model.Image, "images");
+
                     var employee = _mapper.Map<Employee>(model); // Cast model To Employee
 
                     var Count = _unitOfWork.EmployeeRepository.Update(employee);
@@ -217,7 +223,10 @@ namespace Company.G03.PL.Controllers
                     var employee = _mapper.Map<Employee>(model); // Cast model To Employee
                     var count = _unitOfWork.EmployeeRepository.Delete(employee);
                     if (count > 0)
+                    {
+                        DecumentSettings.Delete(model.ImageName, "images");
                         return RedirectToAction("Index");
+                    }
                 }
             }
             catch (Exception ex) 
