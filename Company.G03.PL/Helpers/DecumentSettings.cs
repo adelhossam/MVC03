@@ -17,7 +17,7 @@ namespace Company.G03.PL.Helpers
             string filePath = Path.Combine(folderPath, fileName);
 
             //4- Save File as Stream 
-            var fileStream = new FileStream(filePath, FileMode.Create);
+            using var fileStream = new FileStream(filePath, FileMode.Create);
 
             file.CopyTo(fileStream); // To Save It on Server file must be put in FileStream 
 

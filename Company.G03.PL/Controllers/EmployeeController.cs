@@ -31,16 +31,16 @@ namespace Company.G03.PL.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index(string SearchInput)
+        public async Task<IActionResult> Index(string SearchInput)
         {
             var employees = Enumerable.Empty<Employee>();
             if (string.IsNullOrEmpty(SearchInput))
             {
-                employees = _unitOfWork.EmployeeRepository.GetAll();
+                employees =await _unitOfWork.EmployeeRepository.GetAllAsync();
             }
             else
             {
-                employees = _unitOfWork.EmployeeRepository.GetByName(SearchInput);
+                employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
             }
             var result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
             //string Message = "Hello World";
@@ -64,16 +64,16 @@ namespace Company.G03.PL.Controllers
             return View(result);
         }
         [HttpGet]
-        public IActionResult Create() 
+        public async Task<IActionResult> Create() 
         {
-            var departments = _unitOfWork.DepartmentRepository.GetAll(); // Extra Data So we Use ViewData
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync(); // Extra Data So we Use ViewData
             ViewData["Departments"] = departments;
 
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeViewModel model)
+        public async Task<IActionResult> Create(EmployeeViewModel model)
         {
             if (ModelState.IsValid) 
             {
@@ -100,7 +100,7 @@ namespace Company.G03.PL.Controllers
                 // Atuo Mapping
                 var employee = _mapper.Map<Employee>(model); // Cast model To Employee
 
-                var count = _unitOfWork.EmployeeRepository.Add(employee);
+                var count = await _unitOfWork.EmployeeRepository.AddAsync(employee);
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee is Created Successfully";
@@ -114,30 +114,30 @@ namespace Company.G03.PL.Controllers
             return View();
         }
 
-        public IActionResult Details(int?id , string ViewName = "Details") 
+        public async Task<IActionResult> Details(int?id , string ViewName = "Details") 
         {
             if (id is null) return BadRequest();
-            var emp = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var emp = await _unitOfWork.EmployeeRepository.GetAsync(id.Value);
             var employee = _mapper.Map<EmployeeViewModel>(emp);
             if(employee is null) return NotFound();
 
             return View(employee);
         }
         [HttpGet]
-        public IActionResult Update (int? id)
+        public async Task<IActionResult> Update (int? id)
         {
             //if (id is null) return BadRequest();
             //var employee = _employeeRepository.Get(id.Value);
             //if (employee is null) return NotFound();
             //return View(employee);
 
-            var departments = _unitOfWork.DepartmentRepository.GetAll(); // Extra Data
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync(); // Extra Data
             ViewData["Departments"] = departments;
-            return Details(id, "Update");
+            return await Details(id, "Update");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update([FromRoute]int? id , EmployeeViewModel model)
+        public async Task<IActionResult> Update([FromRoute]int? id , EmployeeViewModel model)
         {
             try
             {
@@ -171,7 +171,7 @@ namespace Company.G03.PL.Controllers
 
                     var employee = _mapper.Map<Employee>(model); // Cast model To Employee
 
-                    var Count = _unitOfWork.EmployeeRepository.Update(employee);
+                    var Count = await _unitOfWork.EmployeeRepository.UpdateAsync(employee);
                     if (Count > 0)
                         return RedirectToAction("Index");
                 }
@@ -183,18 +183,18 @@ namespace Company.G03.PL.Controllers
             return View(model);
         }
         [HttpGet]
-        public IActionResult Delete(int? id) 
+        public async Task<IActionResult> Delete(int? id) 
         {
             //if (id is null) return BadRequest();
             //var employee = _employeeRepository.Get(id.Value);
             //if (employee is null) return NotFound();
             //return View(employee);
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute]int? id,EmployeeViewModel model)
+        public async Task<IActionResult> Delete([FromRoute]int? id,EmployeeViewModel model)
         {
             try 
             {
@@ -221,7 +221,7 @@ namespace Company.G03.PL.Controllers
                     //    WorkForId = model.WorkForId,
                     //};
                     var employee = _mapper.Map<Employee>(model); // Cast model To Employee
-                    var count = _unitOfWork.EmployeeRepository.Delete(employee);
+                    var count = await _unitOfWork.EmployeeRepository.DeleteAsync(employee);
                     if (count > 0)
                     {
                         DecumentSettings.Delete(model.ImageName, "images");
