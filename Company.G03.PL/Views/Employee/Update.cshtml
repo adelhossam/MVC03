@@ -9,10 +9,12 @@
 <br />
 
 
-<form asp-action="Update">
+<form asp-action="Update" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="alert alert-danger"></div>
 
     <partial name="PartialView/CreateUpdateEmployeePartialView" model="Model" />
+
+    <input asp-for="ImageName" hidden/>
 
     <br />
     <input value="Update" type="submit" class="btn btn-success" />
