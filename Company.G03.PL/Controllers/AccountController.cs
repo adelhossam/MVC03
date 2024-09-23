@@ -2,6 +2,7 @@
 using Company.G03.PL.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Company.G03.PL.Controllers
@@ -105,6 +106,35 @@ namespace Company.G03.PL.Controllers
 			await _signInManager.SignOutAsync();
 			return RedirectToAction(nameof(SignIn));
 		}
+		[HttpGet]
+		public IActionResult ForgetPassword()
+		{
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SendRestPasswordUrl(ForgetPasswordViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _userManager.FindByEmailAsync(model.Email);
+				{
+					if (user is not null) 
+					{ 
+						var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+						// Create Reset Password Url
+						var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token = token},Request.Scheme);
 
+						var email = new EmailFormat()
+						{
+							To = model.Email,
+							Subject = "Reset Password",
+							Body = url
+						};
+					}
+				}
+				ModelState.AddModelError(string.Empty, "Invalid Operation Please Try Again");
+			}
+			return View(model);
+		}
 	}
 }

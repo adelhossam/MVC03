@@ -42,7 +42,9 @@ namespace Company.G03.PL
             //builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                   .AddEntityFrameworkStores<AppDbContext>();
+                            .AddEntityFrameworkStores<AppDbContext>()
+                            .AddDefaultTokenProviders();
+
 
             // To Change the Default Path For Login when U Try To Access Any Page Without SignIn
             builder.Services.ConfigureApplicationCookie(config => 
