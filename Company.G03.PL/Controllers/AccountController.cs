@@ -9,10 +9,12 @@ namespace Company.G03.PL.Controllers
 	public class AccountController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> _signInManager;
 
-		public AccountController(UserManager<ApplicationUser> userManager)
+		public AccountController(UserManager<ApplicationUser> userManager , SignInManager<ApplicationUser> signInManager)
         {
 			_userManager = userManager;
+		    _signInManager = signInManager;
 		}
 		[HttpGet]
         public IActionResult SignUp()
@@ -50,7 +52,10 @@ namespace Company.G03.PL.Controllers
 							ModelState.AddModelError(string.Empty, error.Description);
 						}
 					}
-					ModelState.AddModelError(string.Empty, "Email is already exits (:");
+					else 
+					{
+						ModelState.AddModelError(string.Empty, "Email is already exits (:");
+					}
 					return View();
 				}
 				ModelState.AddModelError(string.Empty, "UserName is already exits (:");
@@ -77,7 +82,11 @@ namespace Company.G03.PL.Controllers
 						var flag = await _userManager.CheckPasswordAsync(user, model.Password); // To Check The Password is True
 						if (flag)
 						{
-							return RedirectToAction("Index", "Home");
+							var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RemeberMe, false); //Generate Token For U
+							if (result.Succeeded)
+							{
+								return RedirectToAction("Index", "Home");
+							}
 						}
 					}
 					ModelState.AddModelError(string.Empty, "Invalid Login");
