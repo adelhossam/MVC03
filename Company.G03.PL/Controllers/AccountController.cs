@@ -58,5 +58,38 @@ namespace Company.G03.PL.Controllers
 			return View();
 
 		}
+
+		[HttpGet]
+		public IActionResult SignIn() 
+		{
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SignIn(SignInViewModel model)
+		{
+			if (ModelState.IsValid) 
+			{
+				try 
+				{
+					var user = await _userManager.FindByEmailAsync(model.Email); // To Sure If Email existing
+					if (user is not null)
+					{
+						var flag = await _userManager.CheckPasswordAsync(user, model.Password); // To Check The Password is True
+						if (flag)
+						{
+							return RedirectToAction("Index", "Home");
+						}
+					}
+					ModelState.AddModelError(string.Empty, "Invalid Login");
+				}
+				catch (Exception ex) 
+				{
+					ModelState.AddModelError(string.Empty, ex.Message);
+				}
+				
+			}
+			return View();
+		}
+
 	}
 }
