@@ -82,7 +82,7 @@ namespace Company.G03.PL.Controllers
 						var flag = await _userManager.CheckPasswordAsync(user, model.Password); // To Check The Password is True
 						if (flag)
 						{
-							var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RemeberMe, false); //Generate Token For U
+							var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RemeberMe, false); //Generate Token For U According to RemeberMe value
 							if (result.Succeeded)
 							{
 								return RedirectToAction("Index", "Home");
@@ -98,6 +98,12 @@ namespace Company.G03.PL.Controllers
 				
 			}
 			return View();
+		}
+
+		public new async Task<IActionResult> SignOut()
+		{
+			await _signInManager.SignOutAsync();
+			return RedirectToAction(nameof(SignIn));
 		}
 
 	}

@@ -46,7 +46,7 @@ namespace Company.G03.PL
 
             // To Change the Default Path For Login when U Try To Access Any Page Without SignIn
             builder.Services.ConfigureApplicationCookie(config => 
-            {
+            {   
                 config.LoginPath = "/Account/SignIn";
             });
 
