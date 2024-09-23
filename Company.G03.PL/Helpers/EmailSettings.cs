@@ -10,9 +10,9 @@ namespace Company.G03.PL.Helpers
 		{
 			// Mail Server : gmail
 			// smtp
-			var client = new SmtpClient("smtp.gmail.com", 587);
+			var client = new SmtpClient("smtp.gmail.com", 587); 
 			client.EnableSsl = true;
-			client.Credentials = new NetworkCredential("adelhossam1999@gmail.com", "dphhmqewfmwgvpys");
+			client.Credentials = new NetworkCredential("adelhossam1999@gmail.com", "dphhmqewfmwgvpys");// This Pass Gmail generate it for u 
 			client.Send("adelhossam1999@gmail.com", email.To, email.Subject, email.Body);
 
 
