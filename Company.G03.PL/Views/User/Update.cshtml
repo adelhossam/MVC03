@@ -1,0 +1,30 @@
+﻿
+@model UserViewModel
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update User</h1>
+<br />      
+<br />
+
+
+<form asp-action="Update" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+    <partial name="PartialView/CreateUpdateUserPartialView" model="Model" />
+
+
+    <br />
+    <input value="Update" type="submit" class="btn btn-success" />
+    <a asp-action="Index" class="btn btn-light">Back To List</a>
+</form>
+
+@* Client Side Validation The Page Wont Send Request To Server Unless It Sure The Request Dosent Fail
+Like Form if U Send it Without Complete it it Wont Sent a Request To Server   *@
+
+
+@section ClientServerValidation
+{
+    <partial name="_ValidationScriptsPartial" />
+}
