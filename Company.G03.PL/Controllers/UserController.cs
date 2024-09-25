@@ -11,12 +11,10 @@ namespace Company.G03.PL.Controllers
 	public class UserController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
 
-        public UserController(UserManager<ApplicationUser> userManager , IMapper mapper)
+        public UserController(UserManager<ApplicationUser> userManager)
         {
 			_userManager = userManager;
-            _mapper = mapper;
         }
         public async Task<IActionResult> Index(string SearchInput)
 		{
@@ -35,7 +33,7 @@ namespace Company.G03.PL.Controllers
 			}
 			else 
 			{
-				users = _userManager.Users.Where(U => U.Email.ToLower()
+				users = await _userManager.Users.Where(U => U.Email.ToLower()
 									.Contains(SearchInput.ToLower()))
 									.Select(U=> new UserViewModel() 
 									{
@@ -44,7 +42,7 @@ namespace Company.G03.PL.Controllers
 										LastName = U.LastName,
 										Email = U.Email,
 										Roles = _userManager.GetRolesAsync(U).Result
-									});
+									}).ToListAsync();
 			}
 			return View(users);
 		}
@@ -59,7 +57,6 @@ namespace Company.G03.PL.Controllers
 			if (UserFromDb is null)
 				return NotFound(); // Error 404
 
-			//var User = _mapper.Map<UserViewModel>(UserFromDb);
 			var User = new UserViewModel()
 			{
 				Id = UserFromDb.Id,
