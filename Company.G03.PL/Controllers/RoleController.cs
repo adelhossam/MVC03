@@ -1,4 +1,5 @@
-﻿using Company.G03.PL.ViewModels;
+﻿using Company.G03.DAL.Models;
+using Company.G03.PL.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace Company.G03.PL.Controllers
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RoleController(RoleManager<IdentityRole> roleManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string SearchInput)
@@ -141,6 +144,34 @@ namespace Company.G03.PL.Controllers
                 }
             }
             return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId)
+        {
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            var users = await _userManager.Users.ToListAsync();
+                
+            var usersInRole = new List<UserInRoleViewModel>();
+            foreach(var user in users)
+            {
+                var userInRole = new UserInRoleViewModel()
+                {
+
+                    UserId = user.Id,
+                    UserName = user.UserName
+                };
+                if (await _userManager.IsInRoleAsync(user,role.Name))
+                {
+                    userInRole.IsSelected = true;  
+                }
+                else
+                    userInRole.IsSelected = false;
+
+                usersInRole.Add(userInRole);
+
+            }
+            return View(usersInRole);
         }
 
     }
