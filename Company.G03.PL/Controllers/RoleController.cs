@@ -150,6 +150,10 @@ namespace Company.G03.PL.Controllers
         {
 
             var role = await _roleManager.FindByIdAsync(roleId);
+            if (role is null)
+                return NotFound();
+
+            ViewData["RoleId"] = roleId;
             var users = await _userManager.Users.ToListAsync();
                 
             var usersInRole = new List<UserInRoleViewModel>();
@@ -161,17 +165,47 @@ namespace Company.G03.PL.Controllers
                     UserId = user.Id,
                     UserName = user.UserName
                 };
-                if (await _userManager.IsInRoleAsync(user,role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
-                    userInRole.IsSelected = true;  
+                    userInRole.IsSelected = true;
                 }
                 else
+                {
                     userInRole.IsSelected = false;
+                }
 
                 usersInRole.Add(userInRole);
 
             }
             return View(usersInRole);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId , List<UserInRoleViewModel>users )
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+
+            if (role is not null)
+            {
+                if (ModelState.IsValid)
+                {
+                    foreach (var user in users)
+                    {
+                        var appUser = await _userManager.FindByIdAsync(user.UserId);
+                        if (user.IsSelected && !await _userManager.IsInRoleAsync(appUser, role.Name))
+                        {
+                            await _userManager.AddToRoleAsync(appUser, role.Name);
+                        }
+                        else if (!user.IsSelected && await _userManager.IsInRoleAsync(appUser, role.Name))
+                        {
+                           await _userManager.RemoveFromRoleAsync(appUser, role.Name);
+                        }
+                    }
+                    return RedirectToAction(nameof(Update),new { id = roleId});
+                }
+            }
+            return View(users);
+            
         }
 
     }
