@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Company.G03.DAL.Models;
 using Company.G03.PL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,9 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace Company.G03.PL.Controllers
 {
-	public class UserController : Controller
+    [Authorize(Roles ="Admin")]
+
+    public class UserController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 
