@@ -1,12 +1,15 @@
 using Company.G03.PL.Models;
 using Company.G03.PL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text;
 
 namespace Company.G03.PL.Controllers
 {
-    public class HomeController : Controller
+	[Authorize]
+
+	public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IScopedServices scopedServices01;

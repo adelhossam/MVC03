@@ -3,6 +3,7 @@ using Company.G03.BLL.Interfaces;
 using Company.G03.DAL.Models;
 using Company.G03.PL.Helpers;
 using Company.G03.PL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -10,7 +11,8 @@ using System.Reflection.Metadata;
 
 namespace Company.G03.PL.Controllers
 {
-    public class EmployeeController : Controller
+	[Authorize]
+	public class EmployeeController : Controller
     {
         //private readonly IEmployeeRepository _employeeRepository;
         //private readonly IDepartmentRepository _departmentRepository;

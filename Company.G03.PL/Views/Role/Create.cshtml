@@ -1,0 +1,27 @@
+﻿
+@model RoleViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Role</h1>
+<br />
+<br />
+
+<form asp-action="Create" enctype="multipart/form-data">
+   
+    <partial name="PartialView/CreateUpdateRolePartialView" model="Model" />
+
+    <br />
+    <input value="Create" type="submit" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-light">Back To List</a>
+</form>
+
+@* Client Side Validation The Page Wont Send Request To Server Unless It Sure The Request Dosent Fail 
+Like Form if U Send it Without Complete it it Wont Sent a Request To Server   *@
+
+
+@section ClientServerValidation
+{
+    <partial name="_ValidationScriptsPartial" />
+}

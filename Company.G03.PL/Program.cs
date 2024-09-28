@@ -42,7 +42,15 @@ namespace Company.G03.PL
             //builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                   .AddEntityFrameworkStores<AppDbContext>();
+                            .AddEntityFrameworkStores<AppDbContext>()
+                            .AddDefaultTokenProviders();
+
+
+            // To Change the Default Path For Login when U Try To Access Any Page Without SignIn
+            builder.Services.ConfigureApplicationCookie(config => 
+            {   
+                config.LoginPath = "/Account/SignIn";
+            });
 
             var app = builder.Build();
 
@@ -59,7 +67,9 @@ namespace Company.G03.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.MapControllerRoute(
                 name: "default",

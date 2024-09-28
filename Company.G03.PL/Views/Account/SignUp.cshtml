@@ -5,14 +5,15 @@
 }
 
 <div class="main-agileinfo">
+	<div asp-validation-summary="All" class="alert alert-danger"></div>  @* To Print The Exception *@
 	<div class="agileits-top">
 		<form asp-action="SignUp" method="post">
-			<input class="text" type="text" asp-for="UserName" placeholder="Username" >
-			<input class="text" type="text" asp-for="FirstName" placeholder="FirstName">
-			<input class="text" type="text" asp-for="LastName" placeholder="LastName">
-			<input class="text email" type="email" asp-for="Email" placeholder="Email" >
-			<input class="text" type="password" asp-for="Password" placeholder="Password">
-			<input class="text w3lpass" type="password" asp-for="ConfirmedPassword" placeholder="Confirm Password">
+			<input class="text" type="text" asp-for="UserName" placeholder="Username" required>
+			<input class="text" type="text" asp-for="FirstName" placeholder="FirstName" required>
+			<input class="text" type="text" asp-for="LastName" placeholder="LastName" required>
+			<input class="text email" type="email" asp-for="Email" placeholder="Email" required>
+			<input class="text" type="password" asp-for="Password" placeholder="Password" required>
+			<input class="text w3lpass" type="password" asp-for="ConfirmedPassword" placeholder="Confirm Password" required>
 			<div class="wthree-text">
 				<label class="anim">
 					<input type="checkbox" asp-for="IsAgree" class="checkbox" required="">
@@ -22,7 +23,7 @@
 			</div>
 			<input type="submit" value="SIGNUP">
 		</form>
-		<p>Don't have an Account? <a href="#"> Login Now!</a></p>
+		<p>Don't have an Account? <a href="SignIn"> Login Now!</a></p>
 	</div>
 </div>
 

@@ -1,7 +1,9 @@
 ﻿using Company.G03.DAL.Models;
+using Company.G03.PL.Helpers;
 using Company.G03.PL.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Company.G03.PL.Controllers
@@ -9,10 +11,12 @@ namespace Company.G03.PL.Controllers
 	public class AccountController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> _signInManager;
 
-		public AccountController(UserManager<ApplicationUser> userManager)
+		public AccountController(UserManager<ApplicationUser> userManager , SignInManager<ApplicationUser> signInManager)
         {
 			_userManager = userManager;
+		    _signInManager = signInManager;
 		}
 		[HttpGet]
         public IActionResult SignUp()
@@ -50,7 +54,10 @@ namespace Company.G03.PL.Controllers
 							ModelState.AddModelError(string.Empty, error.Description);
 						}
 					}
-					ModelState.AddModelError(string.Empty, "Email is already exits (:");
+					else 
+					{
+						ModelState.AddModelError(string.Empty, "Email is already exits (:");
+					}
 					return View();
 				}
 				ModelState.AddModelError(string.Empty, "UserName is already exits (:");
@@ -58,5 +65,120 @@ namespace Company.G03.PL.Controllers
 			return View();
 
 		}
-	}
+
+		[HttpGet]
+		public IActionResult SignIn() 
+		{
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SignIn(SignInViewModel model)
+		{
+			if (ModelState.IsValid) 
+			{
+				try 
+				{
+					var user = await _userManager.FindByEmailAsync(model.Email); // To Sure If Email existing
+					if (user is not null)
+					{
+						var flag = await _userManager.CheckPasswordAsync(user, model.Password); // To Check The Password is True
+						if (flag)
+						{
+							var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RemeberMe, false); //Generate Token For U According to RemeberMe value
+							if (result.Succeeded)
+							{
+								return RedirectToAction("Index", "Home");
+							}
+						}
+					}
+					ModelState.AddModelError(string.Empty, "Invalid Login");
+				}
+				catch (Exception ex) 
+				{
+					ModelState.AddModelError(string.Empty, ex.Message);
+				}
+				
+			}
+			return View();
+		}
+
+		public new async Task<IActionResult> SignOut()
+		{
+			await _signInManager.SignOutAsync();
+			return RedirectToAction(nameof(SignIn));
+		}
+		[HttpGet]
+		public IActionResult ForgetPassword()
+		{
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SendRestPasswordUrl(ForgetPasswordViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _userManager.FindByEmailAsync(model.Email);
+				{
+					if (user is not null) 
+					{ 
+						var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+						// Create Reset Password Url
+						var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token = token},Request.Scheme);
+
+						var email = new EmailFormat()
+						{
+							To = model.Email,
+							Subject = "Reset Password",
+							Body = url
+						};
+						EmailSettings.SendEmail(email);
+						return RedirectToAction(nameof(CheckYourInbox));
+					}
+				}
+				ModelState.AddModelError(string.Empty, "Invalid Operation Please Try Again");
+			}
+			return View(model);
+		}
+		public IActionResult CheckYourInbox()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public IActionResult ResetPassword(string email , string token)
+		{
+			TempData["email"] = email;
+			TempData["token"] = token;
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model )
+		{
+			var email = TempData["email"] as string;
+			var token = TempData["token"]  as string ;
+
+			if (ModelState.IsValid) 
+			{
+				var user =await _userManager.FindByEmailAsync(email);
+                if ( user is not null)
+                {
+					var result = await _userManager.ResetPasswordAsync(user,token,model.Password);
+					if (result.Succeeded) 
+					{
+						return RedirectToAction(nameof(SignIn));
+					}
+				}
+
+				ModelState.AddModelError(string.Empty, "Invalid Operation, Please Try Again");
+
+			}
+			return View(model);
+		}
+
+		public IActionResult AccessDenied()
+		{
+			return View();
+		}
+
+    }
 }
